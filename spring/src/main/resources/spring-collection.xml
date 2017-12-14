@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+>
+
+    <!--若abstract="true"，则此bean仅仅作为模板，不可以实例化bean，即为抽象bean-->
+    <!--当为抽象bean时，可以忽略class属性，由子类bean指定-->
+    <bean id="complexBean"  abstract="false" class="com.yf.spring.ioc.complext.ComplexBean">
+        <property name="name" value="ComplexBean"/>
+        <property name="list">
+            <list value-type="java.lang.String">
+                <value>ele1</value>
+                <value>ele2</value>
+                <value>ele3</value>
+            </list>
+        </property>
+        <property name="map">
+            <map key-type="java.lang.String" value-type="java.lang.String">
+                <entry key="key1" value="value1"/>
+                <entry key="key2" value="value2"/>
+                <entry key="key3" value="value3"/>
+            </map>
+        </property>
+        <property name="set">
+            <set value-type="java.lang.String">
+                <value>set1</value>
+                <value>set2</value>
+                <value>set3</value>
+            </set>
+        </property>
+        <property name="properties">
+            <props>
+                <prop key="pk1">pv1</prop>
+                <prop key="pk2">pv2</prop>
+                <prop key="pk3">pv3</prop>
+            </props>
+        </property>
+    </bean>
+    <!--导入p命名空间配置属性，更简洁-->
+    <bean id="extComplexBean" class="com.yf.spring.ioc.complext.ExtendComplexBean" parent="complexBean"
+          p:properties-ref="pv">
+        <property name="description">
+            <value>extComplexBean &amp;..description<![CDATA[<abc>]]></value>
+        </property>
+        <!--<property name="properties" ref="pv"/>-->
+    </bean>
+    <!--利用util命名空间配置集合类型，便于复用-->
+    <util:properties id="pv">
+        <prop key="pk1">pv01</prop>
+        <prop key="pk2">pv02</prop>
+        <prop key="pk3">pv03</prop>
+    </util:properties>
+</beans>

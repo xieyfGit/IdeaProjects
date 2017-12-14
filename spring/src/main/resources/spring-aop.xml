@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+>
+    <bean id="target" class="com.yf.spring.aop.springaop.StudyBean"/>
+
+    <bean id="before" class="com.yf.spring.aop.springaop.BeforeAdviceOnStudy"/>
+    <bean id="after" class="com.yf.spring.aop.springaop.AfterAdviceOnStudy"/>
+    <bean id="around" class="com.yf.spring.aop.springaop.AroundAdviceOnStudy"/>
+    <bean id="throws" class="com.yf.spring.aop.springaop.ThrowsAdviceOnStudy"/>
+    <bean id="monitor" class="com.yf.spring.aop.springaop.MonitorManager"/>
+
+    <bean id="studyBean" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="interfaces" value="com.yf.spring.aop.springaop.Monitorable"/>
+        <!--<property name="proxyInterfaces" value="com.yf.spring.aop.springaop.StudyBeanInterface"/>-->
+        <property name="proxyTargetClass" value="true"/>
+        <property name="target" ref="target"/>
+        <property name="interceptorNames" value="before,after,around,throws,monitor"/>
+        <!--<property name="interceptorNames" value="monitor"/>-->
+    </bean>
+</beans>

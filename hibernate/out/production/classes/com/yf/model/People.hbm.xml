@@ -1,0 +1,21 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.yf.model.People" table="people">
+        <id name="id" column="peo_id">
+            <generator class="native"/>
+        </id>
+        <property name="name" column="peo_name"/>
+        <!--<set name="contacts" table="con_peo_tb" cascade="all">-->
+        <!--<key column="peo_id"/>-->
+        <!--<many-to-many column="con_id" class="com.yf.model.Contact"/>-->
+        <!--</set>-->
+        <set name="peoConSet" inverse="true">
+            <key column="peo_id"/>
+            <one-to-many class="com.yf.model.PeoCon"/>
+        </set>
+    </class>
+
+</hibernate-mapping>

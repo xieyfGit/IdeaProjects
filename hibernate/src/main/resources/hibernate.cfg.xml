@@ -1,0 +1,81 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<!-- 通常，一个session-factory节点代表一个数据库  -->
+	<session-factory>
+		<!-- 第一部分:数据连接配置 -->
+<!--        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/mydb?useSSL=true&amp;characterEncoding=utf8</property>
+        <property name="connection.username">root</property>
+        <property name="connection.password">root</property>-->
+		<!-- 第二部分：其他相关配置 -->
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="current_session_context_class">thread</property>
+        <property name="show_sql">true</property>
+        <property name="hbm2ddl.auto">update</property>
+        <property name="format_sql">true</property>
+        <property name="connection.isolation">2</property>
+        <!--Druid连接池设置-->
+        <property name="connection.provider_class">com.alibaba.druid.support.hibernate.DruidConnectionProvider</property>
+        <property name="name">druid_ds</property>
+        <property name="username">root</property>
+        <property name="url">jdbc:mysql://localhost:3306/mydb?useSSL=true&amp;characterEncoding=utf8</property>
+        <property name="password">root</property>
+        <property name="testWhileIdle">600</property>
+        <property name="InitialSize">10</property>
+        <property name="MinIdle">10</property>
+        <property name="MaxActive">100</property>
+        <property name="QueryTimeout">10</property>
+
+        <!--事务管理 hibernate5中已经移除-->
+        <!--<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>-->
+        <!--<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JTATransactionFactory</property>-->
+        <!--hibernate5中事务设置方式，默认jdbc，可选jta-->
+        <property name="hibernate.transaction.coordinator_class">jdbc</property>
+        <!--二级缓存-->
+        <property name="hibernate.cache.use_second_level_cache">true</property>
+        <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
+        <!--查询缓存-->
+        <property name="hibernate.cache.use_query_cache">true</property>
+        <!--c3p0连接池设置-->
+        <!--<property name="connection.provider_class">org.hibernate.c3p0.internal.C3P0ConnectionProvider</property>-->
+        <!--<property name="hibernate.c3p0.acquire_increment">10</property>-->
+        <!--<property name="hibernate.c3p0.max_statements">20</property>-->
+        <!--<property name="hibernate.c3p0.max_size">50</property>-->
+        <!--<property name="hibernate.c3p0.min_size">10</property>-->
+        <!--连接闲置多久后可以销毁-->
+        <property name="hibernate.c3p0.timeout">100</property>
+        <!--多长时间检测一次池内的所有连接对象是否闲置 -->
+        <property name="hibernate.c3p0.idle_test_period">600</property>
+		<!-- 第三部分:加载所有的映射（*.hbm.xml）,使用构建工具如gradle、maven时，默认只会把resource文件夹下的文件复制到
+		traget/classes文件夹下，所以需要显示的告诉构建工具复制的目录。否则会出现MappingNotFoundException异常-->
+
+        <mapping resource="com/yf/model/Student.hbm.xml"/>
+
+        <!--<mapping resource="com/yf/model/UserCollection.hbm.xml"/>-->
+
+        <!--<mapping resource="com/yf/model/Account.hbm.xml"/>-->
+        <!--<mapping resource="com/yf/model/Address.hbm.xml"/>-->
+
+        <!--<mapping resource="com/yf/model/Dept.hbm.xml"/>-->
+        <!--<mapping resource="com/yf/model/Employee.hbm.xml"/>-->
+
+        <!--<mapping resource="com/yf/model/Category.hbm.xml"/>-->
+
+        <!--<mapping resource="com/yf/model/ECacheEntity.hbm.xml"/>-->
+
+        <!--<mapping resource="com/yf/model/Contact.hbm.xml"/>-->
+        <!--<mapping resource="com/yf/model/People.hbm.xml"/>-->
+        <!--<mapping resource="com/yf/model/PeoCon.hbm.xml"/>-->
+
+
+
+
+
+       <!--<mapping class="com.yf.annoModel.Account"/>-->
+
+        <!--<mapping package="com.yf.model" class="com.yf.model.Student"/>-->
+	</session-factory>
+</hibernate-configuration>

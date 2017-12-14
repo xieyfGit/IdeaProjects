@@ -1,0 +1,23 @@
+
+<p>@RequestBody、@ResponseBody</p>
+<form action="${pageContext.request.contextPath}/upload">
+    <input type="file"/>
+    <input type="text" name="description">
+    <input type="submit" value="上传">
+</form>
+<%--使用自定义属性绑定器添加雇员--%>
+<p>使用自定义属性绑定器添加雇员，添加格式：name-email-gender-deptNo如：tom-tom@163.com-1-1001</p>
+<form action="${pageContext.request.contextPath }/empAddViaConverter" method="post">
+    <input type="text" name="emp"/>
+    <input type="submit" value="新增用户"/>
+</form>
+
+<%--action在跳转时会默认将当前相对于WEB-INF目录的路径加入到url中，若jsp不在WEB-INF根目录下，则会导致url错误--%>
+<p>使用框架默认属性绑定器添加雇员</p>
+<form:form action="${pageContext.request.contextPath }/emp" method="post" modelAttribute="emp">
+    <c:if test="${requestScope.emp.id == null}">
+        姓名： <form:input path="name"/> <form:errors path="name" cssStyle="color: red"/><br/>
+    </c:if>
+    <c:if test="${requestScope.emp.id != null}">
+        <form:hidden path="id"/>
+        <input type="hidden" name="_method" value="put"/>

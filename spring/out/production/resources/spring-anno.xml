@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context.xsd"
+>
+    <!--resource-pattern="annotation/**/*.class" 扫描指定包下得指定class-->
+    <!--use-default-filters默认为true，此时会扫描除exclude-filter外的所有类。
+    这个特性在springMVC开发时很有用，如对于控制层的配置文件若只想扫描controller，将会得到意外结果，会扫描base-package下的所有@Component类。
+    有两种解决方式：
+    1.将base-package更改为controller所在的包
+    2.将use-default-filters改为false，这样就只会扫描include-filter中指定的类-->
+    <context:component-scan base-package="com.yf.spring.ioc" use-default-filters="true"
+                            name-generator="com.yf.spring.ioc.annotation.generator.SimpleNameGenerator">
+        <!--指定注解的类-->
+        <!--<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
+        <!--指定class或者interface的所有实现类-->
+        <!--<context:include-filter type="assignable" expression="com.yf.spring.ioc.annotation.entity.assigenable.NonScan"/>-->
+
+        <!--regex语法  过滤com包及其子包的controller包中的ller结尾的类 -->
+        <!--<context:include-filter type="regex" expression="com..*.controller.*Controller"/>-->
+
+        <!--AspectJ语法，过滤所有以NoScan结束或者对其继承、扩展的类 此种方式最强大-->
+        <context:include-filter type="aspectj" expression="com.yf.spring.ioc..*NoScan+"/>
+
+        <!--自定义TypeFilter过滤，该类需要实现org.springframework.core.type.filter.TypeFilter接口-->
+        <!--<context:include-filter type="custom" expression="com.yf.spring.ioc.annotation.typefilter.MyTypeFilter"/>-->
+    </context:component-scan>
+
+    <context:property-placeholder location="db.properties"/>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="user" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="jdbcUrl" value="${jdbc.jdbcUrl}"/>
+        <property name="driverClass" value="${jdbc.driverClass}"/>
+        <property name="initialPoolSize" value="${jdbc.initPoolSize}"/>
+        <property name="maxPoolSize" value="${jdbc.maxPoolSize}"/>
+    </bean>
+
+    <!--支持？占位符-->
+    <bean class="org.springframework.jdbc.core.JdbcTemplate" id="jdbcTemplate" p:dataSource-ref="dataSource"/>
+    <!--支持sql的命名参数占位符，适合参数数量多的情况-->
+    <bean class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate" id="namedParameterJdbcTemplate">
+        <constructor-arg name="dataSource" ref="dataSource"/>
+    </bean>
+</beans>

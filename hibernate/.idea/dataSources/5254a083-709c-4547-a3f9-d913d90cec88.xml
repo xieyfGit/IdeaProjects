@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="hibernate.cfg.xml/Hibernate">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.4">
+    <root id="1"/>
+    <schema id="2" parent="1" name="mydb">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <schema id="3" parent="1" name="information_schema"/>
+    <schema id="4" parent="1" name="mysql"/>
+    <schema id="5" parent="1" name="performance_schema"/>
+    <schema id="6" parent="1" name="sys"/>
+    <table id="7" parent="2" name="c"/>
+    <table id="8" parent="2" name="s"/>
+    <table id="9" parent="2" name="sc"/>
+    <column id="10" parent="7" name="cno">
+      <Position>1</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="11" parent="7" name="cname">
+      <Position>2</Position>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="12" parent="7" name="teacher">
+      <Position>3</Position>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <key id="13" parent="7" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>cno</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="14" parent="8" name="sno">
+      <Position>1</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="15" parent="8" name="sname">
+      <Position>2</Position>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="16" parent="8" name="age">
+      <Position>3</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="17" parent="8" name="sex">
+      <Position>4</Position>
+      <DataType>enum(&apos;男&apos;, &apos;女&apos;)|0</DataType>
+    </column>
+    <column id="18" parent="8" name="sdept">
+      <Position>5</Position>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <key id="19" parent="8" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>sno</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="20" parent="9" name="sno">
+      <Position>1</Position>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="21" parent="9" name="cno">
+      <Position>2</Position>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="22" parent="9" name="grade">
+      <Position>3</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <index id="23" parent="9" name="fk_cno">
+      <ColNames>cno</ColNames>
+    </index>
+    <index id="24" parent="9" name="uc_sc">
+      <ColNames>sno
+cno</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="25" parent="9" name="uc_sc">
+      <ColNames>sno
+cno</ColNames>
+      <UnderlyingIndexName>uc_sc</UnderlyingIndexName>
+    </key>
+    <foreign-key id="26" parent="9" name="fk_sno">
+      <ColNames>sno</ColNames>
+      <RefSchemaName>mydb</RefSchemaName>
+      <RefTableName>s</RefTableName>
+      <RefColNames>sno</RefColNames>
+    </foreign-key>
+    <foreign-key id="27" parent="9" name="fk_cno">
+      <ColNames>cno</ColNames>
+      <RefSchemaName>mydb</RefSchemaName>
+      <RefTableName>c</RefTableName>
+      <RefColNames>cno</RefColNames>
+    </foreign-key>
+  </database-model>
+</dataSource>

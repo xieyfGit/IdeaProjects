@@ -1,0 +1,21 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.yf.model.Dept" table="dept">
+        <id name="id" column="dept_id">
+            <generator class="native"/>
+        </id>
+        <property name="name" column="dept_name"/>
+
+        <!--单、双向一对多-->
+        <set name="emps" cascade="all" inverse="true">
+            <key column="dept_id"/>
+            <one-to-many class="com.yf.model.Employee"/>
+        </set>
+
+    </class>
+
+
+</hibernate-mapping>

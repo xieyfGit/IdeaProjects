@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <properties resource="db.properties">
+        <property name="url_main" value="jdbc:mysql://localhost:3306/mydb?useSSL=true&amp;characterEncoding=utf8"/>
+        <property name="url_slave" value="jdbc:mysql://localhost:3306/mydb?useSSL=true&amp;characterEncoding=utf8"/>
+    </properties>
+    <settings>
+        <!--全局设置主键的生成是否有数据库自增完成-->
+        <!--<setting name="useGeneratedKeys" value="true"/>-->
+        <!--设置对返回结果集与字段的映射策略-->
+        <setting name="autoMappingBehavior" value="FULL"/>
+        <!--当返回结果集包含实体类未知字段时的处理方式，默认不处理-->
+        <setting name="autoMappingUnknownColumnBehavior" value="NONE"/>
+        <!--是否对返回结果字段和列名进行驼峰式命名映射-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!--驱动等待数据库响应超时时间-->
+        <setting name="defaultStatementTimeout" value="10"/>
+        <!--为返回结果集获取数量设置提示值，默认不设置-->
+        <setting name="defaultFetchSize" value="10"/>
+        <!--当参数值为空时，为空值指定jdbc类型，默认为OTHER，可以为NULL|VARCHAR|OTHER-->
+        <setting name="jdbcTypeForNull" value="OTHER"/>
+        <!--指定哪些方法触发一次延迟加载，方法名用逗号隔开，默认为equals,clone,hashCode,toString-->
+        <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>
+        <!--指定当结果集中值为null的时候，是否调用映射对象的setter方法，基本类型不能设置为null，默认为false-->
+        <setting name="callSettersOnNulls" value="false"/>
+        <!--当返回行的所有列都是空值时，mybatis是否返回一个空实例，默认false，此时返回null-->
+        <!--似乎无效-->
+        <setting name="returnInstanceForEmptyRow" value="true"/>
+        <setting name="logPrefix" value="Defined-"/>
+        <setting name="logImpl" value="LOG4J2"/>
+        <!--指定MyBatis延迟加载对象使用的代理类型CGLIB、JAVASSIST 默认后者-->
+        <setting name="proxyFactory" value="JAVASSIST"/>
+        <!--使用JDK8 -parameter编译的情况下，允许使用方法签名中的名称作为语句参数名称，默认为true-->
+        <setting name="useActualParamName" value="true"/>
+        <!--指定一个提供Configuration实例的类. 这个被返回的Configuration实例是用来加载被反序列化对象的懒加载属性值.
+         这个类必须包含一个签名方法static Configuration getConfiguration().默认不设置-->
+        <!--<setting name="configurationFactory" value=""/>-->
+    </settings>
+
+    <!--类型别名-->
+    <typeAliases>
+        <!--<typeAlias type="com.yf.entity.User" alias="User"/>-->
+        <!--<typeAlias type="com.yf.entity.UserMapper" alias="UserMapper"/>-->
+        <!--<typeAlias type="com.yf.entity.Address" alias="Address"/>-->
+        <typeAlias type="org.apache.ibatis.mapping.VendorDatabaseIdProvider" alias="DB_BENDOR"/>
+        <!--默认以首字母小写的类名为类型别名-->
+        <package name="com.yf.entity"/>
+    </typeAliases>
+    <!--自定义类型映射处理，可以简单的继承BaseTypeHandler<T>-->
+    <typeHandlers>
+        <typeHandler handler="com.yf.typehandler.MyDateTypeHandler"/>
+        <!--对于指定类型根据数据库字段类型判断映射策略：枚举值名称或者枚举值position-->
+        <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.yf.entity.Gender"/>
+    </typeHandlers>
+
+    <!--自己实现ObjectFactory，对象工厂需要做的仅仅是实例化目标类,可以通过setProperties添加属性-->
+    <objectFactory type="com.yf.MyObjectFactory"/>
+    <environments default="development">
+        <environment id="development">
+            <!--MyBatis中有两种事务管理器：JDBC(由数据源获取的连接管理事务)|MANAGED（什么也不做，事务由容器管理）-->
+            <!--当然你可以自行实现TransactionFactory ，然后type设置为实现类全名-->
+            <!--Spring + MyBatis则没必要配置事务管理器，因为 Spring 模块会使用自带的管理器来覆盖前面的配置-->
+            <transactionManager type="MANAGED">
+                <!--有些容器可能需要阻止它关闭连接，此时将值设置为false-->
+                <property name="closeConnection" value="false"/>
+            </transactionManager>
+            <!--为了使用延迟加载而设置 [UNPOOLED|POOLED|JNDI]-->
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url_main}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+                <property name="defaultTransactionIsolationLevel" value="2"/>
+
+                <!--POOLED新增属性-->
+                <!--在任意时间可以存在的活动（也就是正在使用）连接数量 默认为10-->
+                <property name="poolMaximumActiveConnections" value="10"/>
+                <property name="poolMaximumIdleConnections" value="5"/>
+                <!--在被强制返回之前，池中连接被检出（checked out）时间，默认20000单位ms-->
+                <property name="poolMaximumCheckoutTime" value="10000"/>
+                <!--重试获取连接的超时时间，默认20000单位ms-->
+                <property name="poolTimeToWait" value="20000"/>
+                <!--默认的事务隔离级别-->
+                <!--获取到坏连接时，重试获取连接池新连接的最大次数不超过与poolMaximumIdleConnections的和 默认为3-->
+                <property name="poolMaximumLocalBadConnectionTolerance" value="5"/>
+                <!--数据库的侦测查询，当失败时会由恰当的提示信息，默认NO PING QUERY SET-->
+                <property name="poolPingQuery" value="select 1"/>
+                <!--是否启用侦测查询,使用一个可执行的 SQL 语句设置poolPingQuery 属性-->
+                <property name="poolPingEnabled" value="true"/>
+                <!--配置 poolPingQuery 的使用频度,这可以被设置成匹配具体的数据库连接超时时间，默认为0：即所有连接每一时刻都被侦测 -->
+                <property name="poolPingConnectionsNotUsedFor" value="0"/>
+
+                <!--JNDI新增属性-->
+                <!--这个数据源的实现是为了能在如 EJB 或应用服务器这类容器中使用-->
+                <!--<property name="initial_context" value="context"/>-->
+                <!--<property name="data_source" value="datasource"/>-->
+            </dataSource>
+        </environment>
+        <environment id="product">
+            <transactionManager type="JDBC"/>
+            <dataSource type="com.yf.C3P0DataSourceFactory">
+                <property name="driverClass" value="${driver}"/>
+                <property name="jdbcUrl" value="${url_slave}"/>
+                <property name="user" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--MyBatis 可以根据不同的数据库厂商执行不同的语句-->
+    <databaseIdProvider type="DB_BENDOR">
+        <property name="MYSQL" value="mysql"/>
+        <property name="ORACLE" value="oracle"/>
+    </databaseIdProvider>
+    <mappers>
+        <mapper class="com.yf.entity.UserMapper"/>
+        <mapper resource="com/yf/entity/Address.xml"/>
+        <!--加载了两遍-->
+        <!--<package name="com.yf.entity"/>-->
+    </mappers>
+
+</configuration>

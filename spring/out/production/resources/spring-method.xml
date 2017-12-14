@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+>
+    <bean id="car" class="com.yf.spring.ioc.method.Car" scope="prototype">
+        <property name="name" value="红旗"/>
+    </bean>
+
+    <!--方法一：通过Boss实现BeanFactoryAware接口注入BeanFactory实例获取多例car-->
+    <!--<bean id="boss" class="com.yf.spring.ioc.method.Boss">-->
+        <!--<property name="name" value="boss"/>-->
+    <!--</bean>-->
+
+    <!--方法二:通过lookup-method方法，获取多例car-->
+    <bean id="boss" class="com.yf.spring.ioc.method.Boss">
+        <property name="name" value="boss"/>
+        <lookup-method name="getCar" bean="car"/>
+    </bean>
+
+    <!--方法三:通过实现MethodReplacer接口,运行时替换Boss.getCar()方式，获取多例car-->
+    <!--<bean id="boss" class="com.yf.spring.ioc.method.Boss">-->
+        <!--<property name="name" value="boss"/>-->
+        <!--<property name="carName">-->
+            <!--<idref bean="car"/>-->
+        <!--</property>-->
+        <!--<replaced-method name="getCar" replacer="bossChanger"/>-->
+    <!--</bean>-->
+    <!--<bean id="bossChanger" class="com.yf.spring.ioc.method.BossChanger"/>-->
+
+    <!--<bean class="com.yf.spring.ioc.method.Boss" id="boss" >-->
+        <!--<property name="car" ref="car"/>-->
+    <!--</bean>-->
+    <bean class="com.yf.spring.ioc.method.Boss" id="boss2">
+        <!--此处，car必须先设置以初始化后才能级联属性-->
+        <property name="car" ref="car"/>
+        <property name="car.name" value="马萨拉蒂"/>
+    </bean>
+</beans>

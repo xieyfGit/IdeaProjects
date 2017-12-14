@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx  http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop  http://www.springframework.org/schema/aop/spring-aop.xsd"
+>
+    <context:component-scan base-package="com.yf.spring.hibernate"/>
+    <context:property-placeholder location="db.properties"/>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="user" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="jdbcUrl" value="${jdbc.jdbcUrl}"/>
+        <property name="driverClass" value="${jdbc.driverClass}"/>
+        <property name="initialPoolSize" value="${jdbc.initPoolSize}"/>
+        <property name="maxPoolSize" value="${jdbc.maxPoolSize}"/>
+    </bean>
+
+    <!--sessionFactory配置-->
+    <bean class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" id="sessionFactory">
+        <property name="dataSource" ref="dataSource"/>
+        <!--<property name="configLocation" value="hibernate.cfg.xml"/>-->
+        <!--省去hibernate.cfg.xml配置-->
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL57Dialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+        <property name="packagesToScan" value="com.yf.spring.hibernate.entity"/>
+    </bean>
+    <!--事务管理器配置-->
+
+    <!--单个数据源，基于jdbc的事务管理:JdbcTemplate内获取连接的默认方式DataSourceUtils.getConnection获取线程绑定的Connection-->
+    <!--开启事务注解-->
+    <!--<tx:annotation-driven transaction-manager="transactionManager"/>-->
+    <!--<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">-->
+    <!--<property name="dataSource" ref="dataSource"/>-->
+    <!--</bean>-->
+
+    <!--基于hibernate的事务管理-->
+    <!--开启事务注解-->
+    <!--默认使用jdk动态代理,即基于接口派生子类，此时@Tranactional可以对接口进行设置，否则只能对类进行设置故建议对子类进行设置注解，这样兼容性更好-->
+    <!--<tx:annotation-driven transaction-manager="hibernateTransactionManager" proxy-target-class="false"/>-->
+    <bean class="org.springframework.orm.hibernate5.HibernateTransactionManager" id="hibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!--使用xml方式配置事务-->
+    <tx:advice transaction-manager="hibernateTransactionManager" id="txAdvice">
+        <tx:attributes>
+            <tx:method name="buy" propagation="REQUIRES_NEW"/>
+            <tx:method name="butMany"/>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--配置事务切入点-->
+    <aop:config>
+        <aop:pointcut id="txPointCut" expression="execution(* com.yf.spring.hibernate.service.*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
+    </aop:config>
+
+</beans>

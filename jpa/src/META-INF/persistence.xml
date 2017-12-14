@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
+
+    <persistence-unit name="Jpa" transaction-type="RESOURCE_LOCAL">
+
+        <!--配置具体的JPA实现-->
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <!--添加持久hua化类-->
+        <class>com.yf.jpa.Customer</class>
+        <class>com.yf.jpa.Order</class>
+        <class>com.yf.jpa.Manager</class>
+        <class>com.yf.jpa.Department</class>
+        <class>com.yf.jpa.Item</class>
+        <class>com.yf.jpa.Category</class>
+
+        <!--配置二级缓存策略,注意，配置顺序需要再<class/>标签之后-->
+        <!--ALL(全部缓存), NONE(全不缓存), ENABLE_SELECTIVE(缓存@Cacheable注解)
+        , DISABLE_SELECTIVE(除@Cacheable(false)外缓存), UNSPECIFIED(使用JPA产品默认值)-->
+        <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+        <properties>
+            <!--链接数据库基本信息-->
+            <!--<property name="hibernate.connection.url" value="jdbc:mysql:///jpa"/>-->
+            <!--<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>-->
+            <!--<property name="hibernate.connection.username" value="root"/>-->
+            <!--<property name="hibernate.connection.password" value="root"/>-->
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql:///jpa"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.user" value="root"/>
+            <property name="javax.persistence.jdbc.password" value="root"/>
+            <!--配置JPA实现产品的基本属性-->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL57Dialect"/>
+            <!--二级缓存配置-->
+            <property name="hibernate.cache.use_second_level_cache" value="true"/>
+            <property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory"/>
+            <!--查询缓存-->
+            <property name="hibernate.cache.use_query_cache" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+>
+
+    <!--SpEL引用类的静态属性-->
+    <bean id="wheel" class="com.yf.spring.ioc.spel.Wheel" p:radius="#{T(java.lang.Math).PI*10}" p:brand="马萨拉蒂"
+          p:price="20000"/>
+    <!--SpEL引用其它bean的属性、SpEL表达式计算-->
+    <bean id="car" class="com.yf.spring.ioc.spel.Car" p:brand="玛莎拉蒂" p:wheel="#{wheel}"
+          p:price="#{wheel.getPrice() > 10000 ? 10e6 : 11e6}" init-method="init" destroy-method="destroy"/>
+
+    <bean class="com.yf.spring.ioc.spel.MyBeanProcesser"/>
+</beans>

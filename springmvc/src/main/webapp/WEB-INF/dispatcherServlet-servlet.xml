@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <description>springMVC 控制器层配置</description>
+    <!--是否需要在web.xml中配置ContextLoaderListener，以整合SpringMVC和Spring的IOC容器;
+        一般情况下，推荐将事务管理、数据源、整合其它框架、Service、Dao配置在一个单独的SpringIOC容器中;
+        此处通过<import>标签引入
+        问题：
+         1.为了避免重复扫描，需要使用include-filter 和exclude-filter来指定扫描的目标
+    -->
+    <!--使用contextLoaderListener创建父容器-->
+    <!--<import resource="classpath:beans.xml"/>-->
+    <context:component-scan base-package="com.yf.web" use-default-filters="false">
+        <context:include-filter type="aspectj" expression="com.yf.web.curd.controller.*"/>
+    </context:component-scan>
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/WEB-INF/emp/"
+          p:suffix=".jsp" p:order="99"/>
+    <!--当dispatcherServlet的mapping使用/时，会将所有请求交给handler处理，对于找不到映射的url则交给默认的handler来处理，常用于处理静态文件-->
+    <mvc:default-servlet-handler/>
+    <!--开启控制层的注解,默认注册RequestMappingHandler,RequestMappingHandlerAdapter,ExceptionHandlerExceptionResolver
+    并提供对@ResponseBody,@RequestBody,@Valid验证,@DateTimeFormat,@NumberFormat,conversionService的支持
+    -->
+    <mvc:annotation-driven conversion-service="conversionService"/>
+    <!--使用视图的名字来解析视图,使用order属性来指定视图解析器顺序,默认为int最大值,值越小优先级越高-->
+    <!--参考源码知:实际上使在IOC容器中查找指定名字的Bean，这个Bean负责具体的Model映射-->
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" id="beanNameViewResolver">
+        <property name="order" value="100"/>
+    </bean>
+    <!--配置直接转发的页面,一般用于直接访问WEB-INF页面，而不需要经过handler,此时需要加上-->
+    <!--<mvc:annotation-driven/>注解，否则requestMapping配置的映射将失效-->
+    <mvc:view-controller path="/success" view-name="success"/>
+    <!--<mvc:view-controller path="/locale" view-name="locale"/>-->
+
+    <!--配置国际语言解析，使得可以通过超链接实现-->
+    <!--配置SessionLocaleResolver,注意此处id只能为localeResolver，或者不定义，参考DispatcherServlet定义的属性名-->
+    <bean class="org.springframework.web.servlet.i18n.SessionLocaleResolver" id="localeResolver"
+          p:defaultLocale="zh_CN"/>
+    <!--配置LocaleChangeInterceptor,多个拦截器默认执行顺序类似FilterChain，
+    具体原理参考：HandlerExecutionChain.applyPostHandle/applyPreHandle/triggerAfterCompletion三个方法-->
+    <mvc:interceptors>
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" id="localChangeInterceptor"/>
+        <bean class="com.yf.web.curd.interceptor.FirstInterceptor" id="firstInterceptor"/>
+        <!--更精准的拦截器作用对象配置-->
+        <mvc:interceptor>
+            <mvc:mapping path="/locale"/>
+            <bean class="com.yf.web.curd.interceptor.SecondInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <!--国际化资源文件-->
+    <bean class="org.springframework.context.support.ResourceBundleMessageSource" id="messageSource" p:basename="i18n"
+          p:defaultEncoding="utf-8"/>
+
+
+    <!--上传功能，注意此处Bean的ID只能是multipartResolver参考DispatcherServlet定义的属性名-->
+    <bean class="org.springframework.web.multipart.support.StandardServletMultipartResolver" id="multipartResolver"/>
+    <!--配置conversionService,以添加自定义的属性绑定器converter-->
+
+    <!--若使用了@DateTimeFormat,@NumberFormat类型格式化注解的同时又使用了自定义的类型转换器，必须使用下面这个才有效，否则会报错-->
+    <!--<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">-->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <ref bean="empConverter"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--使用SimpleMappingExceptionResolver配置异常返回页面,exceptionAttribute为错误信息存入请求域的键，默认为exception-->
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver" id="exceptionResolver">
+        <property name="exceptionAttribute" value="ex"/>
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.ArrayIndexOutOfBoundsException">error</prop>
+            </props>
+        </property>
+    </bean>
+
+</beans>

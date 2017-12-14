@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-lazy-init="false">
+    <bean id="helloworld" class="com.yf.spring.ioc.simple.HelloWorld" init-method="init" destroy-method="destroy"/>
+    <!--构造函数注入-->
+    <!--<bean id="person_cons" class="com.yf.spring.ioc.simple.Person">-->
+        <!--<constructor-arg name="helloMessage" ref="helloworld"/>-->
+    <!--</bean>-->
+    <!--Spel注入-->
+    <bean id="person_cons" class="com.yf.spring.ioc.simple.Person">
+        <constructor-arg name="helloMessage" value="#{helloworld}"/>
+    </bean>
+    <!--属性注入，自动装配-->
+    <bean id="person_set" class="com.yf.spring.ioc.simple.Person" autowire="byType" depends-on="helloworld"/>
+    <!--属性注入，手动装配-->
+    <!--<bean id="person_set" class="com.yf.spring.ioc.simple.Person">-->
+    <!--<property name="helloMessage" ref="helloworld"/>-->
+    <!--</bean>-->
+
+    <!--内部bean注入-->
+    <!--<bean id="person_set" class="com.yf.spring.ioc.simple.Person">-->
+    <!--<property name="helloMessage">-->
+    <!--<bean class="com.yf.spring.ioc.simple.HelloWorld"/>-->
+    <!--</property>-->
+    <!--</bean>-->
+
+</beans>

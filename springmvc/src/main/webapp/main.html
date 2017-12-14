@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p>hello world!1</p>
+
+<a href="simExHandler">Test-SimpleMappingExceptionResolver</a>
+
+<a href="defExHandler">Test-DefaultHandlerExceptionResolver</a>
+
+
+<a href="locale">locale test</a>
+
+<a href="TestServlet">TestServlet-Test</a>
+<a href="emps">empList-Test</a>
+<a href="emp">addEmp-Test</a>
+<a href="helloView">helloView-Test</a>
+<a href="redirect">testRedirect-Test</a>
+<a href="forward">testForward-Test</a>
+<a href="testSessionAttribute">testSessionAttribute-Test</a>
+
+<a href="testMap">testMap-Test</a>
+<a href="getUser">getUser-Test</a>
+<a href="testCookie">testCookie-Test</a>
+<a href="hello">-Test-RequestHeader</a>
+<a href="helloAction.action">helloAction-Test</a>
+<a href="success">spring-success!</a>
+<a href="testMethod">testMethod</a>
+<a href="testMethod?name=mrxie&age=22">test-params</a>
+<a href="testAnt/dd/testAnt">testAnt</a>
+<a href="/testPathVariable/1234">testPathVariable</a>
+<form action="testMethod" method="post">
+    <input type="text" value="mrXie"/>
+    <input type="text" value="22" name="age"/>
+    <input id="input" type="submit" value="post请求"/>
+</form>
+<form action="testMethod" method="post">
+    <input type="hidden" name="_method" value="PUT"/>
+    <input type="text" value="24" name="age1"/>
+    <input id="input1" type="submit" value="put请求"/>
+</form>
+<form action="testMethod" method="post">
+    <input type="hidden" name="_method" value="DELETE"/>
+    <input type="text" value="25" name="age2"/>
+    <input id="input2" type="submit" value="delete请求"/>
+</form>
+
+<form action="putUser" method="post">
+    <input type="hidden" name="_method" value="PUT"/>
+    name: <input type="text" name="name" value="mrXie"/>
+    age:<input type="text" name="age" value="22"/>
+    <input id="addUser" type="submit" value="添加user"/>
+</form>
+<!--模拟修改操作，原始数据：id :1 name tom : age: 12要求age不能被修改，表单回显模拟操作-->
+<form action="testModelAttribute" method="post">
+    <input type="hidden" name="id" value="1"/>
+    name: <input type="text" name="name" value="mrXie"/>
+    <input id="editUser" type="submit" value="修改user"/>
+</form>
+</body>
+</html>

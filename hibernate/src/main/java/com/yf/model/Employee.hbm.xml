@@ -1,0 +1,15 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.yf.model.Employee" table="emp">
+        <id column="emp_id" name="id">
+            <generator class="native"/>
+        </id>
+        <property name="name" column="emp_name"/>
+        <many-to-one name="dept" column="dept_id" />
+    </class>
+
+
+</hibernate-mapping>

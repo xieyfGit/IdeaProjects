@@ -1,0 +1,38 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.yf.model.UserCollection" table="userCollection_tab">
+        <id name="id" column="id" type="long">
+            <generator class="native"></generator>
+        </id>
+        <property name="name" column="name" type="string"/>
+
+        <set name="set" table="user_set">
+            <key column="user_id"></key>
+            <element type="string" column="set_column"/>
+        </set>
+
+        <list name="list" table="usre_list">
+            <key column="user_id"/>
+            <list-index column="position"/>
+            <element column="list_column" type="string"/>
+        </list>
+
+        <idbag name="collection" table="user_collection">
+            <collection-id column="col_id" type="string">
+                <generator class="uuid"></generator>
+            </collection-id>
+            <key column="user_id"></key>
+            <element type="string" column="user_col_column"/>
+        </idbag>
+
+        <map name="map" table="user_map">
+            <key column="usre_id"></key>
+            <map-key type="string" column="map_key"/>
+            <element type="string" column="map_value"/>
+        </map>
+    </class>
+
+</hibernate-mapping>

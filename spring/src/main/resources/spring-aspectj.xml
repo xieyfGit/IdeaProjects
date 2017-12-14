@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop  http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+>
+    <!--注解方式-->
+
+    <!--为@Aspect注解类自动生成代理对象-->
+    <!--<aop:aspectj-autoproxy/>-->
+    <!--配置扫描包路径-->
+    <!--<context:component-scan base-package="com.yf.spring.aop.aspectj"/>-->
+
+    <!--xml配置方式-->
+    <bean id="student" class="com.yf.spring.aop.aspectj.Student"/>
+    <bean id="studentAspect" class="com.yf.spring.aop.aspectj.XmlStudentAspect" />
+    <bean id="loggingAspect" class="com.yf.spring.aop.aspectj.LoggingAspect" />
+    <aop:config>
+        <!--配置切点表达式-->
+        <aop:pointcut id="pointCut" expression="execution(* com.yf.spring.aop.aspectj.Student.*(..))"/>
+
+        <aop:aspect ref="loggingAspect" order="1">
+            <aop:before method="beforeMethod" pointcut-ref="pointCut"/>
+        </aop:aspect>
+        <aop:aspect ref="studentAspect" order="2">
+            <aop:before method="beforeMethod" pointcut-ref="pointCut"/>
+            <aop:around method="aroundMethod" pointcut-ref="pointCut"/>
+            <aop:after method="afterMethod" pointcut-ref="pointCut"/>
+            <aop:after-returning method="afterMethodReturn" pointcut-ref="pointCut" returning="result"/>
+            <aop:after-throwing method="onThrows" pointcut-ref="pointCut" throwing="ex"/>
+        </aop:aspect>
+    </aop:config>
+</beans>

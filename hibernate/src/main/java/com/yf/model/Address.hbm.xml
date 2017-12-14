@@ -1,0 +1,19 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.yf.model.Address" table="address">
+
+        <id name="id" column="addr_id">
+            <generator class="native" />
+        </id>
+        <property name="addr" column="address"/>
+        <!--基于外键的双向一对一，property-ref 指定反向属性引用-->
+        <!--<one-to-one name="account" property-ref="address"/>-->
+        <!--基于主键的双向一对一，其中一方不用任何特殊设置-->
+        <one-to-one name="account"/>
+    </class>
+
+
+</hibernate-mapping>

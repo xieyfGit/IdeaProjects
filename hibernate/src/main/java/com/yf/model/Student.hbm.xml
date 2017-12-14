@@ -1,0 +1,16 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="true" >
+    <class name="com.yf.model.Student" table="student">
+        <id name="id" column="id" type="string">
+            <generator class="com.yf.utils.YFUUIDGenerator"/>
+        </id>
+        <property name="name" column="name" type="string"/>
+        <property name="age"  column="age" type="int"/>
+    </class>
+
+    <query name="hql" read-only="true">
+        <![CDATA[from Student where name = :name]]>
+    </query>
+</hibernate-mapping>

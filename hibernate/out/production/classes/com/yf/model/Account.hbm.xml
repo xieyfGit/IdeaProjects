@@ -1,0 +1,28 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.yf.model.Account" table="account">
+        <!--基于外键 单向或者双向一对一关系 若一端不添加one-to-one则为单向-->
+        <!--<id name="id" column="acc_id">-->
+            <!--<generator class="native" />-->
+        <!--</id>-->
+        <!--<property name="name" column="acc_name"/>-->
+        <!--<many-to-one name="address" column="address_id" unique="true" cascade="all"/>-->
+
+        <!--基于主键 单向或者双向一对一关系,优点：节约一个外键字段-->
+
+        <id name="id" column="acc_id">
+            <generator class="foreign">
+                <param name="property">address</param>
+            </generator>
+        </id>
+        <version name="version" column="version"/>
+        <property name="name" column="acc_name"/>
+        <!--constrained="true" 告诉当前主键，你的值是关联表中的主键值，当前主键对于关联表来说就是外键-->
+        <one-to-one name="address" constrained="true"/>
+    </class>
+
+
+</hibernate-mapping>
